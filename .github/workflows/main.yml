@@ -1,18 +1,24 @@
 name: Test Deployment
-run-name: Deploying a website 🚀
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  Test-Deployment:
+  build:
     runs-on: ubuntu-latest
+    container: ubuntu
     steps:
-    - name: Copy files to another repository
-      uses: nkoppel/push-files-to-another-repository@v1.1.1
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-      with:
-        source-files: '/'
-        destination-username: 'kkolago'
-        destination-repository: 'sens-box-website'
-        destination-branch: 'main'
-        destination-directory: 'public'
-        commit-email: 'krzysztof.kolago@gmail.com'
+      - uses: actions/checkout@v2
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: '.'
+          destination-github-username: 'kkolago'
+          destination-repository-name: 'sens-box-website'
+          user-email: 'krzysztof.kolago@gmail.com'
+          target-branch: main
+          target-directory: 'public'
